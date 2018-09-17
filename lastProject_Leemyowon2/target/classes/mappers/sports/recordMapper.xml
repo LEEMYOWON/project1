@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.mapper.recordMapper">
+
+	<select id="selectArsenal" resultType="ArsenalVO">
+		SELECT * FROM p_arsenal
+	</select>
+	
+	<select id="selectContents" resultType="ContentsVO">
+		SELECT * FROM contents
+	</select>
+	
+	<insert id="insertRecord">
+		INSERT INTO record(game_CD, inning, rbi, pitcher, hitter, pitching, hitting, arsenal_CD, ballSpeed)
+		VALUES(#{game_CD}, #{inning}, #{rbi}, #{pitcher}, #{hitter}, #{pitching}, #{hitting}, #{arsenal_CD}, #{ballSpeed})
+	</insert>
+	
+	<select id="readRecord" resultType="RecordVO">
+		SELECT date, inning, p.pname pitcherName, p2.pname hitterName, a.paname, ballSpeed, r.game_CD, c.contents, t.tname awayName, t2.tname homeName
+		FROM record r INNER JOIN player p ON r.pitcher = p.player_CD INNER JOIN player p2 ON r.hitter = p2.player_cd
+		JOIN game g ON g.game_CD = r.game_CD JOIN p_arsenal a ON a.arsenal_CD = r.arsenal_CD JOIN contents c
+		ON r.hitting = c.contents_CD JOIN team t ON t.team_CD = g.away JOIN team t2 ON t2.team_CD = g.home
+		WHERE g.date = '2018-08-24'
+	</select>
+	
+</mapper>
+

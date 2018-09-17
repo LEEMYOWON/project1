@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.mapper.GameMapper">
+
+	<insert id="insert_schedule" >
+		INSERT INTO GAME (away, home, date)
+		VALUES(#{away}, #{home}, #{date})
+	</insert>
+	
+	<select id="select_schedule" resultType="GameVO">
+		SELECT g.game_CD, t.team_CD homeTeam_CD, t.tname homeName, tt.team_CD awayTeam_CD, tt.tname awayName, g.date FROM 
+		game g LEFT JOIN team t ON g.home = t.team_CD  LEFT JOIN team tt ON g.away = tt.team_CD
+	</select>
+	
+	<select id="select_startInfo" resultType="GameVO">
+		SELECT g.game_CD game_CD, t.team_CD awayTeam_CD, t.tname homeName, tt.team_CD homeTeam_CD, tt.tname awayName, g.date FROM game g 
+		LEFT JOIN team t ON g.home = t.team_CD LEFT JOIN team tt ON g.away = tt.team_CD WHERE date=#{value}
+	</select>
+	
+	<select id="todayGames" resultType="GameVO">
+		SELECT g.game_CD, t.team_CD homeTeam_CD, t.tname homeName, tt.team_CD awayTeam_CD, tt.tname awayName, g.date FROM game g 
+		LEFT JOIN team t ON g.home = t.team_CD  LEFT JOIN team tt ON g.away = tt.team_CD WHERE date = CURRENT_DATE()
+	</select>
+		
+</mapper>

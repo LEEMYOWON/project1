@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.mapper.playMapper">
+
+	<insert id="insert_playP">
+		INSERT INTO playP (game_CD, category_CD, player_CD, defenseP_CD)
+		VALUES((SELECT game_CD FROM game JOIN team ON game.away = team.team_CD WHERE tname = #{tname} AND 
+		date = #{date}), #{category_CD}, #{player_CD}, #{defenseP_CD})
+	</insert>
+	
+	<insert id ="insert_playH">
+		INSERT INTO playH (game_CD, category_CD, lineup, player_CD, defenseP_CD)
+		VALUES((SELECT game_CD FROM game JOIN team ON game.away = team.team_CD WHERE tname = #{tname} AND date = 
+		#{date}), #{category_CD}, #{lineup}, #{player_CD}, #{defenseP_CD})	
+	</insert>
+	
+	<select id="select_playP" resultType="playP_VO">
+		SELECT playP_CD, p_p.game_CD, category_CD, pname, tname, defenseP, p.player_CD player_CD FROM playP as p_p
+		JOIN player as p ON p_p.player_CD = p.player_CD JOIN defenseP as d ON p_p.defenseP_CD = d.defenseP_CD
+		JOIN game as g ON p_p.game_CD = g.game_CD JOIN team as t ON t.team_CD = p.team_CD WHERE p.team_CD=#{team_CD}
+		AND p_p.game_CD IN (SELECT game_CD FROM game WHERE date = #{date})
+	</select> 
+	
+	<select id="select_playH" resultType="playH_VO">
+		SELECT playH_CD, p_h.game_CD, category_CD, lineup, pname, p.team_CD, tname, p.player_CD player_CD, defenseP FROM playH as p_h
+		JOIN player as p ON p_h.player_CD = p.player_CD JOIN defenseP as d ON p_h.defenseP_CD = d.defenseP_CD
+		JOIN game as g ON p_h.game_CD = g.game_CD JOIN team as t ON t.team_CD = p.team_CD WHERE p.team_CD=#{team_CD}
+		AND p_h.game_CD IN (SELECT game_CD FROM game WHERE date = #{date}) ORDER BY lineup asc
+	</select>
+	
+</mapper>
