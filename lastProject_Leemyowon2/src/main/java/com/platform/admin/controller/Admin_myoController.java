@@ -52,6 +52,10 @@ public class Admin_myoController {
 	public String main() {
 		return "admin_index";
 	}
+	@RequestMapping("/adminLogin")
+	public String adminLogin() {
+		return "adminLogin";
+	}
 
 	@RequestMapping("/starting_info")
 	public String starting_info() {
