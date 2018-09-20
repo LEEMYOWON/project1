@@ -24,10 +24,12 @@ import com.platform.admin.domain.PlayH_VO;
 import com.platform.admin.domain.PlayP_VO;
 import com.platform.admin.domain.PlayerVO;
 import com.platform.admin.domain.RecordVO;
+import com.platform.admin.domain.UserVO;
 import com.platform.admin.service.GameService;
 import com.platform.admin.service.Play_Service;
 import com.platform.admin.service.PlayerService;
 import com.platform.admin.service.RecordService;
+import com.platform.admin.service.UserService;
 
 /**
  * Handles requests for the application home page.
@@ -47,6 +49,9 @@ public class Admin_myoController {
 	
 	@Inject
 	RecordService recordService;
+	
+	@Inject
+	UserService userService;
 
 	@RequestMapping("/")
 	public String main() {
@@ -280,6 +285,20 @@ public class Admin_myoController {
 		List<RecordVO> list = recordService.readRecord();
 		model.addAttribute("todayRecord", list);
 		System.out.println(list);
+	}
+	
+	@RequestMapping(value = "adminJoin", method = RequestMethod.POST)
+	public @ResponseBody void join(String uid, String upw, String uname) throws Exception {
+		UserVO vo = new UserVO(uid, upw, uname);
+		userService.join(vo);
+	}
+	
+	@RequestMapping(value = "adminLogin", method = RequestMethod.POST)
+	public @ResponseBody UserVO login(String uid, String upw) throws Exception {
+		UserVO vo = null;
+		vo = userService.login(uid, upw);
+		System.out.println(vo);
+		return vo;
 	}
 	
 }
